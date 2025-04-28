@@ -5,7 +5,6 @@ Improved Python implementation of GCUA for analyzing codon usage in DNA sequence
 Original C program by James McInerney (1997)
 Python implementation by James McInerney (2025)
 Enhanced version with additional features
-Refactored for improved maintainability
 """
 
 import argparse
