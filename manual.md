@@ -87,6 +87,35 @@ Upon execution, GCUA will:
 * Display a welcome banner showing the program name, version, author, and citation information.
 * Indicate the currently selected **Genetic Code** (defaulting to Standard/Universal Code 1 initially).
 * Present the **Main Menu** with numbered options.
+  
+````
+    *******************************************************
+    GCUA: General Codon Usage Analysis 2.3.0
+    by James McInerney
+
+    Cite: McInerney JO. GCUA: general codon usage analysis.
+    Bioinformatics. 1998;14(4):372-3.
+    doi: 10.1093/bioinformatics/14.4.372
+    *******************************************************
+
+    Genetic Code: [1] Standard (Universal)
+    
+
+No data loaded.
+Current genetic code: [1] Standard (Universal)
+
++----------------------+
+|      MAIN MENU       |
++----------------------+
+  1. Load FASTA file      
+  2. Analysis             
+  3. Visualization        
+  4. Sequence Optimization
+  5. Export Data          
+  6. Preferences          
+  7. Help                 
+  Q. Quit program      
+````
 
 The interface is entirely text-based; you interact by typing the number or letter corresponding to your desired menu option and pressing Enter.
 
@@ -98,8 +127,9 @@ GCUA employs a hierarchical menu system for navigation. You start at the Main Me
 
 **Recommended General Workflow:**
 
-1.  **Load Data (Option 1):** This is the essential first step. Provide the path to your FASTA file containing the coding sequences you wish to analyze. The program will parse the sequences and perform initial calculations like codon counts and base composition. Progress indicators will be shown for larger files.
-2.  **Set Preferences (Option 6 - CRUCIAL):** Immediately after loading data (or before, if you know the code), navigate to the Preferences menu. The most critical setting here is the **Genetic Code**. Select the NCBI translation table ID that accurately reflects the organism(s) your sequences come from (e.g., 2 for Vertebrate Mitochondrial, 11 for Bacterial). Using the wrong code will lead to incorrect translations and invalidate many analyses (RSCU, AA Usage, CAI, Fop, Optimization). **Remember: If you change the genetic code *after* loading data, you *must* reload the FASTA file (Option 1 again) for the change to take effect on the data.** You can also configure output verbosity and visualization style here.
+
+1.  **Set Preferences (Option 6 - CRUCIAL):** Before loading data, navigate to the Preferences menu. The most critical setting here is the **Genetic Code**. Select the NCBI translation table ID that accurately reflects the organism(s) your sequences come from (e.g., 2 for Vertebrate Mitochondrial, 11 for Bacterial). Using the wrong code will lead to incorrect translations and invalidate many analyses (RSCU, AA Usage, CAI, Fop, Optimization). **Remember: If you change the genetic code *after* loading data, you *must* reload the FASTA file (Option 1 again) for the change to take effect on the data.** You can also configure output verbosity and visualization style here.
+2.  **Load Data (Option 1):** This is the essential first step. Provide the path to your FASTA file containing the coding sequences you wish to analyze. The program will parse the sequences and perform initial calculations like codon counts and base composition. Progress indicators will be shown for larger files.
 3.  **Perform Analysis (Option 2):** Explore the Analysis menu. You can either run specific analyses individually (e.g., calculate only ENC) or use **Option 2.1 (Calculate all metrics)** to compute everything needed for most downstream tasks and visualizations. This is often convenient.
 4.  **Visualize (Option 3):** Once analyses are complete, use the Visualization menu to generate plots. Select the desired plot type. GCUA will generate an HTML file (if using Plotly) and attempt to open it in your default web browser. These plots are interactive, allowing you to explore the data visually.
 5.  **Optimize (Option 4 - Optional):** If your goal is to redesign sequences (e.g., for expression in a different host), use this menu. You'll need to have identified or loaded optimal codons first (via Analysis Menu Option 9).
