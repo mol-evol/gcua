@@ -48,8 +48,6 @@ GCUA is distributed as a Python script (`gcua.py`) and requires a functioning Py
 * **Machine Learning:**
     * `scikit-learn`: A comprehensive machine learning library. GCUA specifically uses its implementation of Principal Component Analysis (`sklearn.decomposition.PCA`) for multivariate analysis.
 * **Visualization:**
-    * `matplotlib`: The foundational plotting library in Python. While not always called directly by the user's choice, it often serves as a backend for other plotting libraries like Seaborn.
-    * `seaborn`: Builds upon Matplotlib to provide a high-level interface for drawing attractive and informative statistical graphics. Used for some internal plotting logic or potentially future text-based plots.
     * `plotly`: A powerful library for creating interactive, web-based visualizations. GCUA uses Plotly to generate HTML plots (scatter plots, heatmaps, histograms) that allow users to hover over data points, zoom, pan, and switch between different views (e.g., different axes in multivariate plots).
 
 **Installation Steps:**
