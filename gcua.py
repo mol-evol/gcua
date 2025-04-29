@@ -298,8 +298,6 @@ DNA_AA_TO_CODONS_MAP = {}
 for code_id, dna_aa_map in DNA_GENETIC_CODE_MAP.items():
     DNA_AA_TO_CODONS_MAP[code_id] = create_aa_to_codons_map(dna_aa_map)
 
-# Configuration class to hold program settings
-
 
 class Config:
     def __init__(self):
@@ -333,7 +331,7 @@ class Config:
         else:
             return "Unknown"
 
-# Define visualization abstract base class
+
 class Visualization(ABC):
     @abstractmethod
     def create(self, data, output_path=None):
@@ -2670,6 +2668,7 @@ class GCUAData:
 
         return saved_files
 
+
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -2682,36 +2681,6 @@ class NumpyEncoder(json.JSONEncoder):
             return bool(obj)
         return super().default(obj)
 
-    def save_codon_comparison_results(self, results, output_path):
-        """
-        Save codon usage comparison results to files.
-
-        Parameters:
-        results (dict): Results from compare_codon_usage_axis_cohorts
-        output_path (str): Base path for output files
-
-        Returns:
-        list: Paths to saved files
-        """
-        saved_files = []
-
-        # Add metadata to results
-        results["metadata"] = {
-            "version": VERSION,
-            "genetic_code_id": self.config.genetic_code,
-            "genetic_code_name": self.config.get_genetic_code_name(),
-            "date": pd.Timestamp.now().isoformat()
-        }
-
-        # Prepare serializable results without manual type conversion
-        json_path = f"{output_path}_complete.json"
-        with open(json_path, 'w') as f:
-            json.dump(results, f, indent=4, cls=NumpyEncoder)
-
-        saved_files.append(json_path)
-        print(f"Complete results saved to {json_path}")
-
-        return saved_files
 
 class GCUAInterface:
     """Command-line interface for the GCUA tool."""
@@ -2834,83 +2803,6 @@ class GCUAInterface:
                 else:
                     print("\nInvalid option. Please try again.")
                     self._pause()
-
-    # def _display_menu(self, title, options):
-    #     """
-    #     Display a menu and handle user input.
-    #
-    #     Parameters:
-    #     title (str): Menu title
-    #     options (list): List of (option_text, option_key, handler) tuples
-    #
-    #     Returns:
-    #     bool: True if menu should be redisplayed, False to exit menu
-    #     """
-    #     while True:
-    #         self._clear_screen()
-    #         self.display_banner()
-    #
-    #         # Show data status
-    #         if self.data.sequences:
-    #             print(
-    #                 f"\nCurrent data: {len(self.data.sequences)} sequences from '{self.data.file_path}'")
-    #             # Display current genetic code in menus where it's relevant
-    #             if any(
-    #                 keyword in title.lower() for keyword in [
-    #                     'codon',
-    #                     'analysis',
-    #                     'optimization',
-    #                     'amino',
-    #                     'translation']):
-    #                 code_id = self.config.genetic_code
-    #                 code_name = self.config.get_genetic_code_name()
-    #                 print(f"Using genetic code: [{code_id}] {code_name}")
-    #         else:
-    #             print("\nNo data loaded.")
-    #             # Always show the genetic code in the status area
-    #             code_id = self.config.genetic_code
-    #             code_name = self.config.get_genetic_code_name()
-    #             print(f"Current genetic code: [{code_id}] {code_name}")
-    #
-    #         # Display submenu with improved formatting
-    #         title_display = f"{title}"
-    #         border_length = max(
-    #             len(title_display) + 4,
-    #             30)  # Ensure minimum width
-    #
-    #         print(f"\n+{'-' * border_length}+")
-    #
-    #         # Center the title
-    #         padding = (border_length - len(title_display)) // 2
-    #         print(
-    #             f"|{' ' * padding}{title_display}{' ' * (border_length - padding - len(title_display))}|")
-    #
-    #         print(f"+{'-' * border_length}+")
-    #
-    #         # Calculate padding for alignment
-    #         max_option_length = max(len(option_text)
-    #                                 for option_text, _, _ in options)
-    #
-    #         for option_text, option_key, _ in options:
-    #             # Pad to align all options
-    #             padding = " " * (max_option_length - len(option_text))
-    #             print(f"  {option_key}. {option_text}{padding}")
-    #
-    #         choice = input("\nEnter your choice: ").strip().upper()
-    #
-    #         for option_text, option_key, handler in options:
-    #             if choice == option_key:
-    #                 result = handler()
-    #                 if result is not None and not result:
-    #                     return False
-    #                 break
-    #         else:
-    #             if choice == 'R':
-    #                 return False
-    #             else:
-    #                 print("\nUnrecognized command.")
-    #                 self._pause()
-    #     return True
 
     def _input_fasta(self):
         """Handle FASTA file input."""
@@ -4839,7 +4731,7 @@ class GCUAInterface:
     - Multiple genetic code tables are supported (NCBI translation tables)
     - Change the genetic code in the Preferences menu
 
-    For detailed information, visit https://github.com/mol-evol/gcua 
+    For detailed information, visit https://github.com/mol-evol/gcua
     """
 
         print(help_text)
