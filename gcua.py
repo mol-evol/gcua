@@ -4839,7 +4839,7 @@ class GCUAInterface:
     - Multiple genetic code tables are supported (NCBI translation tables)
     - Change the genetic code in the Preferences menu
 
-    For detailed information, visit the GCUA documentation.
+    For detailed information, visit https://github.com/mol-evol/gcua 
     """
 
         print(help_text)
