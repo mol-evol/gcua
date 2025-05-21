@@ -59,6 +59,7 @@ GCUA requires Python 3.8 or higher and several third-party packages:
 - seaborn
 - scikit-learn
 - plotly
+- ete3
 
 ### Installation Steps
 

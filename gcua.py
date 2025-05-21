@@ -2804,6 +2804,69 @@ class GCUAInterface:
                     print("\nInvalid option. Please try again.")
                     self._pause()
 
+    def _export_multivariate(self, result=None, analysis_type=None, data_type=None):
+        """Export multivariate analysis results to a file."""
+        if result is None:
+            if not hasattr(self.data, 'multivariate_results') or not self.data.multivariate_results:
+                print("\nNo multivariate analysis results found. Performing analysis...")
+                result = self.data.perform_multivariate_analysis()
+            else:
+                result = self.data.multivariate_results
+
+        if not result:
+            print("Multivariate analysis failed or no results available.")
+            self._pause()
+            return True
+
+        # Determine analysis type and data type if not provided
+        if analysis_type is None:
+            analysis_type = result.get('analysis_type', 'CA')
+        if data_type is None:
+            data_type = result.get('data_type', 'RSCU')
+
+        # Get output path
+        output_path = self.file_manager.get_output_path(
+            self.data, None, f"{analysis_type}_{data_type}_results") + '.tsv'
+
+        # Extract coordinates and explained variance
+        coords = result['coordinates']
+        explained_var = result['explained_variance']
+
+        with open(output_path, 'w') as f:
+            # Add metadata
+            f.write(f"# GCUA {analysis_type} of {data_type} Results\n")
+            f.write(f"# Version: {VERSION}\n")
+            f.write(f"# Genetic Code: [{self.config.genetic_code}] {self.config.get_genetic_code_name()}\n")
+            f.write(f"# Total Genes: {len(self.data.gene_names)}\n")
+            f.write(f"# Date: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+
+            # Write explained variance
+            f.write("\n# Explained variance by dimension:\n")
+            for i, var in enumerate(explained_var):
+                f.write(f"# {coords.columns[i]}: {var:.4f} ({var*100:.2f}%)\n")
+            f.write("#" + "-" * 50 + "\n\n")
+
+            # Write coordinates
+            coords.to_csv(f, sep='\t', float_format='%.4f')
+
+        print(f"\nMultivariate analysis results saved to {output_path}")
+
+        # Ask if user wants to export loadings as well
+        if 'loadings' in result:
+            export_loadings = input("\nDo you want to export loadings as well? (y/n): ").strip().lower()
+            if export_loadings == 'y':
+                loadings_path = output_path.replace('.tsv', '_loadings.tsv')
+                with open(loadings_path, 'w') as f:
+                    f.write(f"# GCUA {analysis_type} of {data_type} Loadings\n")
+                    f.write(f"# Version: {VERSION}\n")
+                    f.write(f"# Genetic Code: [{self.config.genetic_code}] {self.config.get_genetic_code_name()}\n")
+                    f.write("#" + "-" * 50 + "\n\n")
+                    result['loadings'].to_csv(f, sep='\t', float_format='%.4f')
+                print(f"Loadings saved to {loadings_path}")
+
+        self._pause()
+        return True
+
     def _input_fasta(self):
         """Handle FASTA file input."""
         file_path = input("\nName of the FASTA-formatted file: ").strip()
