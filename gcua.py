@@ -32,7 +32,7 @@ from scipy.stats import chi2_contingency
 import json
 
 # Program constants
-VERSION = "2.3.0"
+VERSION = "2.3.1"
 PROGRAM_NAME = "GCUA: General Codon Usage Analysis"
 AUTHOR = "James McInerney"
 
