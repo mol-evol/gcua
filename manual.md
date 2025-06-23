@@ -90,7 +90,7 @@ Upon execution, GCUA will:
   
 ````
     *******************************************************
-    GCUA: General Codon Usage Analysis 2.3.0
+    GCUA: General Codon Usage Analysis 2.5.1
     by James McInerney
 
     Cite: McInerney JO. GCUA: general codon usage analysis.
@@ -107,17 +107,21 @@ Current genetic code: [1] Standard (Universal)
 +----------------------+
 |      MAIN MENU       |
 +----------------------+
-  1. Data Management      
-  2. Quick Analysis (Guided Workflow)
-  3. Custom Analysis      
-  4. Visualization & Export
-  5. Advanced Tools       
-  6. Settings & Preferences
-  7. Help & Documentation 
-  Q. Quit program      
+  1. Data Management                 
+  2. Quick Analysis (Guided Workflow) (requires data)
+  3. Custom Analysis (requires data)
+  4. Visualization & Export (requires data)
+  5. Advanced Tools (requires data)
+  6. Settings & Preferences          
+  7. Help & Documentation            
+  Q. Quit program                    
+
+  H. Show help for all menu items
+
+💡 Tip: Type a number followed by '?' (e.g., '1?') for help on that option
 ````
 
-The interface is entirely text-based; you interact by typing the number or letter corresponding to your desired menu option and pressing Enter.
+The interface is entirely text-based; you interact by typing the number or letter corresponding to your desired menu option and pressing Enter. Notice that menu options requiring data are clearly marked and the help system is prominently displayed.
 
 ---
 
@@ -180,12 +184,10 @@ The top-level menu provides access to all major functional areas of GCUA.
 * **5. Advanced Tools:** Sequence optimization, cluster detection, outlier analysis
 * **6. Settings & Preferences:** Configure genetic codes, visualization options, and performance settings
 * **7. Help & Documentation:** Access comprehensive help and program information
-* **3. Visualization:** Accesses tools to create graphical representations of your analysis results, aiding interpretation.
-* **4. Sequence Optimization:** Provides functions to redesign input sequences based on calculated or loaded optimal codon tables.
-* **5. Export Data:** Allows saving calculated data, analysis results, and optimized sequences to various file formats for external use or record-keeping.
-* **6. Preferences:** Enables configuration of crucial program settings, most importantly the genetic code.
-* **7. Help:** Displays a concise help text outlining the program's purpose and features, along with the citation details.
-* **Q. Quit program:** Terminates the GCUA application.
+* **Q. Quit program:** Terminates the GCUA application
+* **H. Show help for all menu items:** Displays detailed help for all available options in the current menu
+
+Note: Options 2-5 are marked as "(requires data)" when no sequences are loaded, helping guide users to load data first.
 
 ---
 
