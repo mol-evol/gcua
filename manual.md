@@ -1,5 +1,5 @@
-# GCUA: General Codon Usage Analysis - User Manual (Version 2.5.0)
-![Version](https://img.shields.io/badge/version-2.5.0-blue) ![Python](https://img.shields.io/badge/python-3.8%2B-green) ![License](https://img.shields.io/badge/license-MIT-orange)
+# GCUA: General Codon Usage Analysis - User Manual (Version 2.5.1)
+![Version](https://img.shields.io/badge/version-2.5.1-blue) ![Python](https://img.shields.io/badge/python-3.8%2B-green) ![License](https://img.shields.io/badge/license-MIT-orange)
 
 **Author:** James McInerney
 **Original C Program:** 1997
@@ -27,7 +27,7 @@ GCUA processes coding sequences provided in the standard FASTA format. It calcul
 
 This program represents a significant modernization of the original C version. Rewritten entirely in Python, it leverages the power of modern scientific libraries like NumPy, Pandas, SciPy, and Biopython. This transition facilitates enhanced functionality, broader and more easily maintainable support for the diverse range of known genetic codes (essential for analyzing mitochondrial genomes or organisms with non-standard nuclear codes), and the integration of rich, interactive data visualization capabilities powered by the Plotly library, allowing for dynamic exploration of results.
 
-**New in Version 2.5.0:** GCUA now includes advanced performance features that enable processing of genome-scale datasets with millions of genes. The program intelligently manages memory usage, supports parallel processing across multiple CPU cores, and includes automatic checkpointing for recovery from interruptions. These enhancements make GCUA suitable for analyzing complete genomes, large metagenomes, and massive comparative genomics datasets while maintaining compatibility with smaller-scale analyses.
+**New in Version 2.5.1:** Building on the performance features of 2.5.0, this release adds an interactive help system, improved visualization axis selection for all output formats, and critical bug fixes including corrected genetic code implementations. The program now features a context-sensitive help system accessible from any menu, allowing users to get help on specific options without leaving the program. Multivariate visualizations now prompt for axis selection regardless of output format (HTML, SVG, PNG, PDF), ensuring users have full control over their data visualization.
 
 ---
 
@@ -149,6 +149,21 @@ GCUA employs a hierarchical menu system for navigation. You start at the Main Me
 
 Navigation typically involves entering the number/letter for your choice. Use 'R' in submenus to return to the previous menu level.
 
+**Interactive Help System (New in v2.5.1):**
+GCUA now includes a comprehensive context-sensitive help system:
+- **"H" for Help:** Type 'H' at any menu to see detailed explanations of all available options
+- **"?" Queries:** Type a number followed by '?' (e.g., "1?") to get help for a specific menu item
+- **Context-Aware:** Help content adapts to your current menu location
+- **Examples Included:** Many help entries include usage examples and tips
+- **No Documentation Needed:** Get all the information you need without leaving the program
+
+Example usage:
+```
+Main Menu> H          # Shows help for all main menu options
+Main Menu> 2?         # Shows specific help for Quick Analysis
+Analysis Menu> 5?     # Shows help for multivariate analysis options
+```
+
 ---
 
 ## 5. Main Menu Options
@@ -262,7 +277,12 @@ This is the central hub for performing calculations and statistical analyses on 
 
 This menu allows graphical exploration of the results obtained from the Analysis menu. Requires the relevant analyses to have been run. Uses Plotly for interactive HTML outputs.
 
-* **1. Create multivariate analysis plot:** Generates a scatter plot of genes based on their coordinates from CA or PCA (usually Axis 1 vs Axis 2).
+* **1. Create multivariate analysis plot:** Generates a scatter plot of genes based on their coordinates from CA or PCA.
+    * *Axis Selection (New in v2.5.1):* The program now prompts you to select which axes to plot regardless of output format:
+        * Shows available axes with their explained variance percentages
+        * Default is Axis 1 vs Axis 2, but you can choose any combination
+        * Works for all formats: HTML (interactive), SVG, PNG, and PDF
+        * Essential for exploring higher-order patterns in your data
     * *For Correspondence Analysis (CA):* Creates a biplot showing both genes AND codons/amino acids in the same coordinate space:
         * Blue circles: Main cluster of genes
         * Red circles: Outlier genes
@@ -437,6 +457,40 @@ This option provides a quick reference within the program.
 * **Content:** Displays a concise summary of GCUA's purpose, the typical workflow, a list of major analysis types and visualization options.
 * **Citation:** Reminds users of the correct way to cite the original GCUA publication if the software is used in research work. Proper citation is essential for acknowledging the tool's development.
 * **Current Settings:** Also displays the currently active genetic code for user awareness.
+
+---
+
+## 13. Version History
+
+### Version 2.5.1 (Latest)
+**New Features:**
+- **Interactive Help System:** Context-sensitive help available from any menu
+  - Type 'H' for comprehensive help on all menu options
+  - Type '?' after any menu number (e.g., '1?') for specific help
+  - Includes examples and usage tips
+- **Enhanced Visualization Controls:** Axis selection now available for all output formats (HTML, SVG, PNG, PDF), not just HTML
+- **Improved User Experience:** Better error messages and clearer prompts throughout
+
+**Bug Fixes:**
+- **Critical Genetic Code Fixes:** Corrected implementations for multiple genetic codes to match NCBI standards exactly:
+  - Codes 2, 3, and 5: Removed invalid codons containing 'N'
+  - Code 12: Fixed CTG translation (now correctly Ser instead of Ala)
+  - Code 13: Corrected AAA translation
+  - Codes 27 and 28: Added missing TGA → Trp translation
+  - Code 33: Added missing AGA → Ser and AGG → Lys translations
+- **Quick Multivariate Workflow:** Fixed AttributeError by correcting method calls from calculate_rscu() to get_rscu_values()
+- **Data Integrity:** All genetic codes now verified to have exactly 64 valid codons
+
+### Version 2.5.0
+- Advanced performance features for genome-scale datasets
+- Hybrid memory management with configurable thresholds
+- Parallel processing support with multi-core utilization
+- Automatic checkpointing and recovery for long analyses
+- Smart visualizations that adapt to dataset size
+- RSCU heatmap switches to summary statistics for large datasets (>1000 genes)
+
+### Version 2.4.0 and Earlier
+- See GitHub repository for complete version history
 
 
 

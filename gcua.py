@@ -51,7 +51,7 @@ from scipy.stats import chi2_contingency, chi2
 import json
 
 # Program constants
-VERSION = "2.5.0"  # Added parallel processing, checkpointing, and batch processing
+VERSION = "2.5.1"  # Added parallel processing, checkpointing, and batch processing
 PROGRAM_NAME = "GCUA: General Codon Usage Analysis"
 AUTHOR = "James McInerney"
 
