@@ -1,4 +1,19 @@
 gcua_outputs/
 oldVersions/
 .DS_Store
-y
+__pycache__
+.git
+.gitignore
+
+# Test files and datasets
+*.fna
+*.fna.zip
+*.pkl
+test_*.py
+create_large_dataset.py
+
+# Log files
+*.log
+
+# Temporary directories
+genomes/

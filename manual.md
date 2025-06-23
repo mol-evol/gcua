@@ -1,5 +1,5 @@
-# GCUA: General Codon Usage Analysis - User Manual (Version 2.3.0)
-![Version](https://img.shields.io/badge/version-2.3.0-blue) ![Python](https://img.shields.io/badge/python-3.8%2B-green) ![License](https://img.shields.io/badge/license-MIT-orange)
+# GCUA: General Codon Usage Analysis - User Manual (Version 2.5.0)
+![Version](https://img.shields.io/badge/version-2.5.0-blue) ![Python](https://img.shields.io/badge/python-3.8%2B-green) ![License](https://img.shields.io/badge/license-MIT-orange)
 
 **Author:** James McInerney
 **Original C Program:** 1997
@@ -26,6 +26,8 @@ Analyzing codon usage can provide valuable insights into:
 GCUA processes coding sequences provided in the standard FASTA format. It calculates a diverse suite of metrics, ranging from basic frequencies (codon counts, amino acid usage) to sophisticated measures of bias (Relative Synonymous Codon Usage - RSCU, Effective Number of Codons - ENC, Codon Adaptation Index - CAI, Frequency of Optimal Codons - Fop, Synonymous Codon Usage Order - SCUO). Furthermore, it provides detailed base composition statistics, including overall GC content and positional GC content (GC1, GC2, GC3, GC3s).
 
 This program represents a significant modernization of the original C version. Rewritten entirely in Python, it leverages the power of modern scientific libraries like NumPy, Pandas, SciPy, and Biopython. This transition facilitates enhanced functionality, broader and more easily maintainable support for the diverse range of known genetic codes (essential for analyzing mitochondrial genomes or organisms with non-standard nuclear codes), and the integration of rich, interactive data visualization capabilities powered by the Plotly library, allowing for dynamic exploration of results.
+
+**New in Version 2.5.0:** GCUA now includes advanced performance features that enable processing of genome-scale datasets with millions of genes. The program intelligently manages memory usage, supports parallel processing across multiple CPU cores, and includes automatic checkpointing for recovery from interruptions. These enhancements make GCUA suitable for analyzing complete genomes, large metagenomes, and massive comparative genomics datasets while maintaining compatibility with smaller-scale analyses.
 
 ---
 
@@ -105,13 +107,13 @@ Current genetic code: [1] Standard (Universal)
 +----------------------+
 |      MAIN MENU       |
 +----------------------+
-  1. Load FASTA file      
-  2. Analysis             
-  3. Visualization        
-  4. Sequence Optimization
-  5. Export Data          
-  6. Preferences          
-  7. Help                 
+  1. Data Management      
+  2. Quick Analysis (Guided Workflow)
+  3. Custom Analysis      
+  4. Visualization & Export
+  5. Advanced Tools       
+  6. Settings & Preferences
+  7. Help & Documentation 
   Q. Quit program      
 ````
 
@@ -123,17 +125,27 @@ The interface is entirely text-based; you interact by typing the number or lette
 
 GCUA employs a hierarchical menu system for navigation. You start at the Main Menu and select options to enter submenus for specific tasks like analysis, visualization, or configuration.
 
-**Recommended General Workflow:**
+**Recommended Workflows:**
 
+**For New Users - Quick Analysis Workflow:**
+1. **Settings & Preferences (Option 6):** First, set the correct genetic code for your organism
+2. **Data Management (Option 1):** Load your FASTA file
+3. **Quick Analysis (Option 2):** Follow the guided workflow that:
+   - Calculates all basic metrics automatically
+   - Performs multivariate analysis
+   - Identifies optimal codons
+   - Creates standard visualizations
+   - Exports all results
 
-1.  **Set Preferences (Option 6 - CRUCIAL):** Before loading data, navigate to the Preferences menu. The most critical setting here is the **Genetic Code**. Select the NCBI translation table ID that accurately reflects the organism(s) your sequences come from (e.g., 2 for Vertebrate Mitochondrial, 11 for Bacterial). Using the wrong code will lead to incorrect translations and invalidate many analyses (RSCU, AA Usage, CAI, Fop, Optimization). **Remember: If you change the genetic code *after* loading data, you *must* reload the FASTA file (Option 1 again) for the change to take effect on the data.** You can also configure output verbosity and visualization style here.
-2.  **Load Data (Option 1):** This is the essential first step. Provide the path to your FASTA file containing the coding sequences you wish to analyze. The program will parse the sequences and perform initial calculations like codon counts and base composition. Progress indicators will be shown for larger files.
-3.  **Perform Analysis (Option 2):** Explore the Analysis menu. You can either run specific analyses individually (e.g., calculate only ENC) or use **Option 2.1 (Calculate all metrics)** to compute everything needed for most downstream tasks and visualizations. This is often convenient.
-4.  **Visualize (Option 3):** Once analyses are complete, use the Visualization menu to generate plots. Select the desired plot type. GCUA will generate an HTML file (if using Plotly) and attempt to open it in your default web browser. These plots are interactive, allowing you to explore the data visually.
-5.  **Optimize (Option 4 - Optional):** If your goal is to redesign sequences (e.g., for expression in a different host), use this menu. You'll need to have identified or loaded optimal codons first (via Analysis Menu Option 9).
-6.  **Export (Option 5):** Save your numerical results, analysis outputs, or optimized sequences. Choose the relevant export option. Files are saved to a dedicated `gcua_outputs` subdirectory created in the same location where you ran `gcua.py`. This keeps your results organized.
-7.  **Help (Option 7):** Refer to this for a quick reminder of the program's functions and the citation.
-8.  **Quit (Option Q):** Exit the program gracefully.
+**For Advanced Users - Custom Analysis:**
+1. **Settings & Preferences (Option 6):** Configure genetic code and other preferences
+2. **Data Management (Option 1):** Load and optionally filter your sequences
+3. **Custom Analysis (Option 3):** Select specific analyses:
+   - Basic Metrics: Codon usage, amino acid usage, base composition
+   - Advanced Analysis: Multivariate (CA/PCA), codon bias metrics
+   - Comparative Analysis: Optimal codons, axis cohort comparison
+4. **Visualization & Export (Option 4):** Create plots and export results
+5. **Advanced Tools (Option 5):** Sequence optimization, cluster detection, outlier analysis
 
 Navigation typically involves entering the number/letter for your choice. Use 'R' in submenus to return to the previous menu level.
 
@@ -143,8 +155,16 @@ Navigation typically involves entering the number/letter for your choice. Use 'R
 
 The top-level menu provides access to all major functional areas of GCUA.
 
-* **1. Load FASTA file:** Initiates the data loading process. Essential starting point. Handles parsing and initial counting.
-* **2. Analysis:** Leads to the core analytical engine, offering a wide range of codon usage metrics and statistical analyses.
+* **1. Data Management:** Load, view summary, filter sequences, and manage your data
+* **2. Quick Analysis:** Guided workflow for standard codon usage analysis - perfect for new users
+* **3. Custom Analysis:** Detailed analysis options organized into logical groups:
+  - Basic Metrics (codon usage, amino acids, base composition)
+  - Advanced Analysis (multivariate CA/PCA, codon bias metrics)
+  - Comparative Analysis (optimal codons, cohort comparison)
+* **4. Visualization & Export:** Unified menu for creating plots and exporting data
+* **5. Advanced Tools:** Sequence optimization, cluster detection, outlier analysis
+* **6. Settings & Preferences:** Configure genetic codes, visualization options, and performance settings
+* **7. Help & Documentation:** Access comprehensive help and program information
 * **3. Visualization:** Accesses tools to create graphical representations of your analysis results, aiding interpretation.
 * **4. Sequence Optimization:** Provides functions to redesign input sequences based on calculated or loaded optimal codon tables.
 * **5. Export Data:** Allows saving calculated data, analysis results, and optimized sequences to various file formats for external use or record-keeping.
@@ -172,10 +192,10 @@ This is the central hub for performing calculations and statistical analyses on 
     * *Display cumulative base composition:* Calculates and displays the average values for these composition metrics across all loaded genes.
     * *Export base composition to file:* Saves the detailed per-gene base composition data to a TSV file.
 * **5. Perform multivariate analysis:** Applies dimensionality reduction techniques to explore major trends in usage patterns across many genes and codons/amino acids simultaneously.
-    * *Perform Correspondence Analysis (CA) on RSCU values:* The standard and often preferred method for codon usage. It positions genes and codons in a low-dimensional space based on their association, often revealing axes related to expression level, GC bias, or other factors.
+    * *Perform Correspondence Analysis (CA) on RSCU values:* The standard and often preferred method for codon usage. It positions genes and codons in a low-dimensional space based on their association, often revealing axes related to expression level, GC bias, or other factors. Note: Single-codon amino acids (e.g., Met and Trp in the standard genetic code) are automatically excluded as they provide no information about synonymous codon usage preference.
     * *Perform Principal Component Analysis (PCA) on RSCU values:* An alternative that focuses on variance. May be less intuitive for frequency data like RSCU compared to CA. Requires Z-score standardization.
     * *Perform CA on amino acid usage:* Explores trends in amino acid composition variation across genes.
-    * *Perform PCA on amino acid usage:* Alternative for exploring AA composition variance.
+    * *Perform PCA on amino acid usage:* Alternative for exploring AA composition variance. Note: Amino acid counts are automatically converted to frequencies (proportions) before PCA to avoid protein length effects dominating the analysis. For amino acid data, CLR (Centered Log-Ratio) transformation is now the default preprocessing method, as it properly handles the compositional nature of amino acid frequencies. Users can still choose standard frequency-based analysis or log transformation if desired.
     * *Visualize multivariate analysis results:* Generates an interactive scatter plot showing genes on the primary axes (e.g., Axis1 vs Axis2 for CA). Requires analysis to be run first.
     * *Export multivariate analysis results:* Saves key outputs: gene coordinates on the principal axes/components, the percentage of variance explained by each axis, and the codon/amino acid loadings (indicating their contribution to each axis). Saved as TSV files.
 * **6. Calculate ENC values:** Focuses on the Effective Number of Codons, a measure of how far codon usage deviates from equal usage of synonymous codons.
@@ -203,6 +223,37 @@ This is the central hub for performing calculations and statistical analyses on 
     * *Compare codon usage between axis cohorts:* (See Option 0 below - this likely triggers the same function).
     * *Export optimal codons to file:* Saves the *currently defined* set of optimal codons (AA -> RNA Codon -> DNA Codon) to a user-specified format (TSV or JSON).
 * **0. Compare codon usage between axis cohorts:** A specialized analysis. It performs CA on RSCU, identifies gene cohorts at opposite extremes of Axis 1 (user defines percentage), calculates aggregate codon usage for each cohort, and performs Chi-squared tests for each amino acid to find codons used significantly differently between the two cohorts. It reports statistics, identifies the likely "highly expressed" cohort (based on lower ENC), and lists preferred codons in each. Useful for identifying codons potentially under translational selection. Results can be exported.
+* **E. Export extreme genes:** Extract genes from the extremes of any calculated metric distribution for downstream analysis. This powerful feature allows identification and export of outlier genes based on various criteria:
+    * *Menu organization:*
+        * **BASE METRICS:** Always available metrics (GC, GC3s, SCUO) and calculated metrics (ENC, CAI, Fop)
+        * **MULTIVARIATE ANALYSES:** All performed CA and PCA analyses with clear labeling showing:
+            - Analysis type (CA or PCA)
+            - Data type (RSCU or AA)
+            - Axis name and explained variance percentage
+            - Example: "CA on RSCU - Axis1 (45.2%)"
+    * *Selection options:* 
+        * Choose percentage of genes to export (e.g., top/bottom 10%, 20%, etc.)
+        * Export top extremes only (highest values)
+        * Export bottom extremes only (lowest values) 
+        * Export both extremes (creates separate files)
+    * *Output format:* TSV files containing:
+        * Selected genes with their primary metric values
+        * Rankings and percentiles
+        * All other available metrics for comprehensive analysis
+        * Metadata headers with selection criteria and thresholds
+        * Filenames reflect the analysis used (e.g., "extreme_genes_CA_RSCU_Axis1_top_10pct.tsv")
+    * *Use cases:* 
+        * Identify highly/lowly expressed genes (using CAI or multivariate axes)
+        * Find genes with extreme codon bias (using ENC)
+        * Select genes with unusual base composition (using GC or GC3s)
+        * Compare extremes from different multivariate analyses
+        * Extract outliers for targeted analysis or experimental validation
+    * *Note:* The menu dynamically updates based on which analyses have been performed. All multivariate analyses from the current session are accessible.
+* **C. Clear cached metrics:** Clears all stored calculation results (multivariate analysis, ENC, CAI, Fop, optimal codons). Use this when:
+    * You've changed the genetic code and need fresh calculations
+    * You've modified reference genes for CAI/Fop
+    * You want to force recalculation of all metrics
+    * The program will show which metrics are currently cached before clearing
 * **R. Return to main menu:** Navigates back to the main program menu.
 
 ---
@@ -212,6 +263,13 @@ This is the central hub for performing calculations and statistical analyses on 
 This menu allows graphical exploration of the results obtained from the Analysis menu. Requires the relevant analyses to have been run. Uses Plotly for interactive HTML outputs.
 
 * **1. Create multivariate analysis plot:** Generates a scatter plot of genes based on their coordinates from CA or PCA (usually Axis 1 vs Axis 2).
+    * *For Correspondence Analysis (CA):* Creates a biplot showing both genes AND codons/amino acids in the same coordinate space:
+        * Blue circles: Main cluster of genes
+        * Red circles: Outlier genes
+        * Green diamonds: Codons (for RSCU analysis) or Amino acids (for AA analysis) with labels
+        * This biplot visualization allows you to see which codons/amino acids are associated with different gene clusters and which drive the separation along each axis
+        * Labels can be toggled on/off by clicking "Codons" or "Amino acids" in the legend for cleaner visualization
+    * *For PCA:* Shows only genes (loadings have different interpretation in PCA)
     * *Interpretation:* Clusters of genes may indicate shared usage patterns. The spread along axes can reveal major sources of variation (e.g., GC bias, expression level). Hovering over points shows gene IDs. Buttons allow switching to view other axis combinations (e.g., Axis 1 vs Axis 3). Outliers (genes far from the main cluster) are highlighted in red.
     * *Requires:* Multivariate analysis (Analysis Menu Option 5) must be run first.
 * **2. Create GC content vs GC3 plot:** Plots GC content at the 3rd codon position (GC3%) against the overall GC content (GC%) for each gene.
@@ -220,8 +278,18 @@ This menu allows graphical exploration of the results obtained from the Analysis
 * **3. Create ENC vs GC3s plot (Wright's plot):** Plots the Effective Number of Codons (ENC) against GC content at synonymous third positions (GC3s%). Includes the theoretical curve representing expected ENC under mutation-drift equilibrium.
     * *Interpretation:* Genes falling significantly *below* the theoretical curve are likely experiencing selective pressure favoring specific codons, leading to higher bias (lower ENC) than expected from GC content alone. Genes on or near the curve suggest codon usage is primarily driven by mutational bias.
     * *Requires:* ENC values (Analysis Menu Option 6) and GC3s (Base Composition).
-* **4. Create RSCU heatmap:** Displays RSCU values in a grid format where rows are codons, columns are genes, and cell color intensity represents the RSCU value.
-    * *Interpretation:* Provides a visual overview of codon preferences across the entire dataset. Patterns in rows indicate consistent preference/avoidance of specific codons. Patterns in columns highlight genes with similar usage biases. Stop codons are typically excluded.
+* **4. Create RSCU heatmap:** Displays RSCU values with automatic adaptation for dataset size.
+    * **For small datasets (<1000 genes):** Traditional heatmap where rows are codons, columns are genes, and cell color intensity represents the RSCU value.
+    * **For large datasets (≥1000 genes):** Summary statistics heatmap showing:
+        * Mean RSCU across all genes for each codon
+        * Standard deviation of RSCU values
+        * Percentiles (10th, 25th, 50th, 75th, 90th) to show distribution
+        * Codons grouped by amino acid for better organization
+        * Color scale centered at RSCU=1 (neutral usage): red for underrepresented (RSCU<1), blue for overrepresented (RSCU>1)
+    * *Interpretation:* 
+        * Small datasets: Patterns in rows indicate consistent preference/avoidance of specific codons. Patterns in columns highlight genes with similar usage biases.
+        * Large datasets: Shows which codons are consistently preferred (mean RSCU>1.5) or avoided (mean RSCU<0.5) across the entire dataset. Standard deviation indicates variability in usage. Hover tooltips provide detailed statistics and interpretation.
+    * *Note:* The program automatically detects dataset size and chooses the appropriate visualization mode. For large datasets, summary statistics are also printed before creating the visualization.
     * *Requires:* RSCU values (calculated during loading or via Analysis Menu Option 2).
 * **5. Create CAI distribution plot:** Generates a histogram showing the frequency distribution of Codon Adaptation Index (CAI) values across all genes.
     * *Interpretation:* Shows the overall landscape of gene adaptation to the reference codon usage bias. A distribution skewed towards high CAI values might indicate strong translational selection in the organism. A rug plot at the bottom shows individual gene CAI values.
@@ -285,7 +353,58 @@ Allows customization of key program settings that affect calculations and output
     * `1: Plotly` (Default): Creates interactive HTML files that open in a web browser. Recommended for data exploration.
     * `2: Text`: Prints rudimentary text-based representations of plots to the terminal (limited utility).
 * **4. Toggle Beep:** Turns an audible beep sound (played on completion of some tasks) on or off.
+* **5. Memory Management Settings:** Configure how GCUA handles large datasets (New in v2.5.0).
+    * **Memory Mode:** Choose between `auto` (default), `low_memory`, or `full_memory`
+    * **File Size Threshold:** Set the file size (in MB) above which low memory mode is used (default: 100 MB)
+    * **Sequence Indexing:** Enable/disable fast disk-based sequence access
+* **6. Performance Settings:** Configure parallel processing and checkpointing (New in v2.5.0).
+    * **Parallel Processing:** Enable/disable multiprocessing for faster analysis
+    * **Number of Processes:** Set how many CPU cores to use (default: all cores - 1)
+    * **Batch Size:** Number of sequences processed together (default: 1000)
+    * **Progress Saving:** Enable automatic checkpointing for long analyses
+    * **Checkpoint Interval:** How often to save progress (default: every 5000 sequences)
 * **R. Return to main menu:** Goes back to the main program menu.
+
+### Performance Features in Detail (New in v2.5.0)
+
+GCUA now includes advanced performance features for handling large-scale genomic data:
+
+**Hybrid Memory Management:**
+- Files smaller than the threshold are loaded entirely into memory for fastest processing
+- Larger files use on-demand loading to conserve memory while maintaining performance
+- Sequence indexing creates a map of gene positions for quick random access
+
+**Parallel Processing:**
+- Utilizes multiple CPU cores to process sequences in parallel
+- Particularly beneficial for the computationally intensive codon counting step
+- Processing scales nearly linearly with the number of cores
+
+**Checkpointing and Recovery:**
+- Automatically saves progress at regular intervals
+- If processing is interrupted, GCUA will resume from the last checkpoint
+- Checkpoint files are stored as `[filename]_checkpoint.pkl`
+- Delete checkpoint files to force a complete restart
+
+**Smart Visualizations:**
+- RSCU heatmap automatically adapts to dataset size
+- For datasets >1000 genes, switches to summary statistics view
+- Prevents browser crashes that would occur with massive gene × codon matrices
+- Shows meaningful patterns (mean RSCU, variability) instead of overwhelming detail
+- Other visualizations may subsample or aggregate data as needed
+
+**Intelligent Metric Caching:**
+- Calculated metrics (CA, ENC, CAI, Fop) are stored in memory
+- Subsequent analyses reuse cached values instead of recalculating
+- Particularly beneficial for custom scatter plots and repeated visualizations
+- Clear cache option available when parameters change
+- Minimal memory overhead (~15-20 MB for 200K genes)
+
+**Recommendations for Large Datasets:**
+- For datasets with >100,000 genes, enable all performance features
+- Use all available CPU cores minus one (to keep system responsive)
+- Set batch size to 5,000-10,000 for optimal throughput
+- Enable checkpointing with intervals of 10,000-50,000 sequences
+- Be aware that visualizations will automatically adapt to show summary statistics
 
 ---
 
