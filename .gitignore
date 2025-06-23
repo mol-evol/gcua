@@ -17,3 +17,6 @@ create_large_dataset.py
 
 # Temporary directories
 genomes/
+
+# Development notes
+CLAUDE.md
